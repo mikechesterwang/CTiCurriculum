@@ -1,0 +1,87 @@
+<!--miniprogram/pages/main/index.wxml-->
+<view class="top">
+  <view class="curriculum-top">
+    <view class="curriculum-week-bar">
+      <view wx:for="{{week}}" class="week-box">
+        <text class="week-text">{{item}}</text>
+      </view>
+    </view>
+    <view class="curriculum-container" style="position: relative;">
+      <view wx:for="{{courseList}}" class="curriculum-item"
+        style="position: absolute; height: {{item.height}}rpx; top: {{item.top}}rpx; left: {{item.weekday * 100}}rpx; background-color: {{item.pattern === '单双周' ? '#415F96' : item.pattern === '单周' ? '#7F9648' : '#E39B8F'}}">
+        <view class="curriculum-item-text-box">
+          <text class="curriculum-name">{{item.name}}</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <view class="button-group">
+    <button size="mini" class="add-button" bindtap="addCourse">添加新课程</button>
+    <!-- <button size="mini" class="share-button" bindtap="shareCurriculum">分享课程表</button> -->
+  </view>
+</view>
+
+<l-popup show="{{editPopupShow}}" >
+  <view class="edit-popup-top">
+    <view class="edit-popup-top-bar">
+      <text class="edit-popup-top-bar-title">· 课程信息 ·</text>
+    </view>
+    <view class="edit-container">
+      <view class="input-block">
+        <text class="input-label">课程名</text>
+        <input value="{{courseName}}" placeholder="填写课程名称" bindinput="onCourseNameInput"/>
+      </view>
+      <view class="input-block">
+        <text class="input-label"> 备注</text>
+        <input value="{{courseNote}}" placeholder="填写课程地点等" bindinput="onCourseNoteInput"/>
+      </view>
+      <view class="time-title-box">
+        <text class="time-title-text">时间</text>        
+      </view>
+      <view class="divLine"></view>
+
+      <view class="weekday-picker-box">
+        <text class="weekday-picker-box-title">每周时段：</text>
+        <picker mode="selector" value="{{weekdayIndex}}" range="{{weekdayArr}}" bindchange="onWeekdayPickerChange">
+          {{weekdayArr[weekdayIndex]}}
+        </picker>
+      </view>
+
+      <view class="time-picker-box">
+        <text class="time-picker-box-title">开始时间：</text>
+        <picker mode="time" value="{{startTime}}" start="{{timeBoundLeft}}" end="{{timeBoundRight}}" bindchange="onStartTimeChange">
+          <view class="picker">
+            {{startTime}}
+          </view>
+        </picker>
+      </view>
+      <view class="time-picker-box">
+        <text class="time-picker-box-title">结束时间：</text>
+        <picker mode="time" value="{{endTime}}" start="08:00" end="23:00" bindchange="onEndTimeChange">
+          <view class="picker">
+            {{endTime}}
+          </view>
+        </picker>
+      </view>
+      <view class="pattern-picker-box">
+        <radio-group bindchange="onPatternPickerChange">
+          单周 <radio value="单周" checked="false" color="#415F96" />
+          双周 <radio value="双周" checked="false" color="#415F96" />
+          单双周 <radio value="单双周" checked="true" color="#415F96" />
+        </radio-group>
+      </view>
+    </view>
+
+    <view class="popup-button-group">
+      <button size="mini" class="popup-button-save" bindtap="saveCourse">保存</button>
+      <block wx:if="{{mode === 1}}">
+        <button size="mini" class="popup-button-delete" bindtap="deleteCourse">删除</button>
+      </block>
+    </view>
+  </view>
+  <view style="height:200rpx;" bindtap="clsoePopup">
+  </view>
+</l-popup>
+
+<l-toast />
