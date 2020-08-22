@@ -1,0 +1,78 @@
+<!--miniprogram/pages/setting/index.wxml-->
+<view class="top">
+  <view class="top-bar">
+    <text class="navigation-text" bindtap="saveAll">保存</text>
+  </view>
+  <view class="container">
+
+    <view class="setting-box" >
+      <view class="switch-setting-unit">
+        <text class="setting-label">微信推送提醒上课</text>
+        <!-- <text style="font-size: 20rpx; color: #dddddd">即将上线，敬请期待</text> -->
+        <switch checked="{{notificationOn}}" bindchange="onEnableNotificationChange"/>
+      </view>
+    </view>
+
+    <view class="setting-box {{frameClass1}}" style="display: {{mode === 0 ? 'block' : 'none'}}">
+      <block wx:if="{{presetCollegeName === '-1'}}">
+        <view class="setting-unit">
+          <text class="setting-label">当前未选择预设设置</text>
+        </view>
+      </block><block wx:else>
+        <view class="setting-unit">
+          <text class="setting-label">当前已选择：</text>
+          <text class="college-name">{{presetCollegeName}}</text>
+        </view>
+        <view class="college-img-box">
+          <l-avatar src="{{presetCollegeImgUrl}}" size="500"/>
+        </view>
+        
+      </block>      
+      <view class="advanced-box">
+        <text class="advanced-title-text" bindtap="switchMode">自定义设置</text>
+        <text class="advanced-title-text" bindtap="pullSetting">获取设置</text>
+      </view>
+    </view>
+    <view class="setting-box {{frameClass2}}" style="display: {{mode === 1 ? 'block' : 'none'}}">
+      <view wx:for="{{semesterMondays}}" class="setting-unit">
+        <text class="setting-label">第{{index + 1}}周的周一</text>
+        <picker data-index="{{index}}" value="{{item}}" mode="date" bindchange="onMondaysChange">
+          {{item}}
+        </picker>
+      </view>
+      <view class="advanced-add-button-box">
+        <l-icon l-class="advanced-button" name="delete" size="35" bindtap="advancedDelteLast" />
+        <l-icon l-class="advanced-button" name="add" size="35" bindtap="advancedAdd"/>
+      </view>
+      <view class="advanced-box">
+        <text class="advanced-title-text" bindtap="switchMode">快速设置</text>
+      </view>
+    </view>
+  </view>
+</view>
+<l-toast />
+
+<l-mask show="{{pullSettingMaskShow}}">
+  <movable-area class='pull-setting-top' bindtap="closePullSettingMask">
+    <movable-view class="pull-setting-card-container" direction="horizontal" inertia="{{true}}" out-of-bounds="{{true}}" friction="{{2}}" style="width: {{presetViewWidthRpx}}rpx;" catchtap="catchIgnore" x="{{pullSettingViewX}}" 
+    bindchange="onCardChange" bindtouchstart="onCardSlideStart" bindtouchend="onCardSlideEnd">
+      <view style="width:{{blankPx}}px;" />
+      <block wx:for="{{presetList}}">
+        <view class="card-gap" style="width:{{cardGapRpx}}rpx"/>
+        <view class="card-top" style="width:{{cardWidthRpx}}rpx">
+          <l-avatar shape="square" size="500" src="{{item.imgUrl}}"/>
+          <view class="card-info-box" style="position: relative;">
+            <view class="card-name-box">
+              <text class="card-name-text">{{item.name}}</text>
+            </view>
+            <view class="">
+            </view>
+            <button data-index="{{index}}" class="pull-setting-button" size="mini" bindtap="getSetting">确认选择</button>
+          </view>
+        </view>
+        <view class="card-gap" style="width:{{cardGapRpx}}rpx" />
+      </block>
+      <view style="width:{{blankPx}}px;" />
+    </movable-view>
+  </movable-area>
+</l-mask>

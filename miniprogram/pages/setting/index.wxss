@@ -1,0 +1,163 @@
+/* miniprogram/pages/setting/index.wxss */
+page{
+  background-color: #F6F6F6;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  /* align-items: center; */
+}
+
+.top-bar{
+  width: 100%;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+  background-color: white;
+  margin-bottom: 30rpx;
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.navigation-text{
+  color: #789EE3;
+  font-size: 30rpx;
+  margin: 20rpx;
+}
+
+
+.setting-box{
+  width: 80%;
+  border-radius: 20rpx;
+  background-color: white;
+  box-shadow: 0px 2px 3px 3px #c5c5c5;
+  margin: 20rpx;
+}
+
+.setting-label{
+  font-size: 30rpx;
+  color: #555555;
+  width: 300rpx;
+}
+
+.setting-unit{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20rpx;
+  align-items: center;
+}
+
+.switch-setting-unit{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 20rpx;
+  align-items: center;
+}
+
+.advanced-box{
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: start;
+  margin: 20rpx;
+}
+
+.advanced-title-text{
+  font-size: 20rpx;
+  color: #789EE3;
+  margin-left: 15rpx;
+}
+
+.front{
+  animation:front 0.5s;
+}
+.back{
+  animation:back 0.5s;
+  display: 'none';
+}
+@keyframes front{
+  0%{display:'none';transform: rotateY(90deg);} 
+  100%{display: 'block';transform: rotateY(0deg);}
+}
+@keyframes back{
+  0%{display:'block';transform: rotateY(0deg);} 
+  100%{display: 'none'; transform: rotateY(-90deg);}
+}
+
+.pull-setting-top{
+  width: 100vw;
+  height: 100vh;
+
+}
+
+.pull-setting-card-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: start;
+  margin-top: 200rpx;
+}
+
+.card-gap{
+  height: 700rpx;
+}
+
+.card-top{
+  border-radius: 20rpx;
+  height: 700rpx;
+  background-color: white;
+}
+
+.card-info-box{
+  height: 200rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.card-name-box{
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.card-name-text{
+  font-size: 30rpx;
+  color: #555555;
+  margin-bottom: 20rpx;
+}
+
+
+.pull-setting-button{
+  background-color: #789EE3;
+  color: white;
+}
+
+.advanced-add-button-box{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 20rpx;
+}
+
+.advanced-button{
+  margin-left: 20rpx;
+  margin-right: 20rpx;
+}
+
+.college-name{
+  font-size: 30rpx;
+  color: #3a3a3a;
+}
+
+.college-img-box{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}

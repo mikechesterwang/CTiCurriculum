@@ -1,8 +1,8 @@
 {
   "usingComponents": {
-    "l-popup": "/miniprogram_npm/lin-ui/popup/index",
-    "l-input": "/miniprogram_npm/lin-ui/input/index",
     "l-toast": "/miniprogram_npm/lin-ui/toast/index",
+    "l-mask": "/miniprogram_npm/lin-ui/mask/index",
+    "l-avatar": "/miniprogram_npm/lin-ui/avatar/index",
     "l-icon": "/miniprogram_npm/lin-ui/icon/index"
   }
 }
