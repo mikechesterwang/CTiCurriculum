@@ -1,22 +1,31 @@
 <!--miniprogram/pages/main/index.wxml-->
 <view class="top">
   <view class="page-top-bar">
-    <view class="navigator-box">
-      <l-icon name="setting" size="50" bindtap="bindSetting"/>
+    <view class="today-box">
+      {{today.weekdayStr}}
     </view>
-    <view class="navigator-box">
-      <l-icon name="add" l-class="{{addButtonClass}}" size="50" bindtap="bindAdd"/>
-      <view class="{{addChoiceTopClass}}" style="position: absolute; right: 100rpx; z-index: 6;">
-        <view class="add-choice-unit" hover-class="add-choice-unit-hover" bindtap="addCourse">
-          <text class="add-choice-unit-text">添加新课程</text>
-        </view>
-        <view class="add-choice-divLine">
-        </view>
-        <view class="add-choice-unit" hover-class="add-choice-unit-hover" bindtap="addEvent">
-          <text class="add-choice-unit-text">添加自定义课程</text>
+    <view class="top-bar-button-group">
+      <view class="navigator-box">
+        <l-icon name="add" l-class="{{addButtonClass}}" size="50" bindtap="bindAdd"/>
+        <view class="{{addChoiceTopClass}}" style="position: absolute; right: 100rpx; z-index: 6;">
+          <view class="add-choice-unit" hover-class="add-choice-unit-hover" bindtap="addCourse">
+            <text class="add-choice-unit-text">添加新课程</text>
+          </view>
+          <view class="add-choice-divLine">
+          </view>
+          <view class="add-choice-unit" hover-class="add-choice-unit-hover" bindtap="addEvent">
+            <text class="add-choice-unit-text">添加自定义课程</text>
+          </view>
         </view>
       </view>
+      <view class="navigator-box">
+        <l-icon name="setting" size="50" bindtap="bindSetting"/>
+      </view>
+      <view class="navigator-box">
+        <l-icon name="order" size="50" bindtap="bindSwicthView"/>
+      </view>
     </view>
+    
   </view>
   <view class="curriculum-top">
     <view class="curriculum-week-bar">

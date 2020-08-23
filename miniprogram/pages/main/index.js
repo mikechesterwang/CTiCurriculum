@@ -7,8 +7,7 @@ Page({
   data: {
     // constant
     DEFAULT_ZINDEX: 1,
-    TOPPPEST_ZINDEX: 999,
-
+    TOPPPEST_ZINDEX: 20,
     // variables
     calendarHeightRpx: 830,
     calendarWidthRpx: 100,
@@ -34,17 +33,15 @@ Page({
     // mode
     mode: 0,
     courseList: [],
-    
     // calendar variabls
     timeLeft: 0,
     timeRight: 0,
     lineArr: [],
-
+    today: undefined,
     // css variables
     addChoiceTopClass: 'add-choice-top-close',
     addButtonClass: 'add-choice-button-close',
     addChoiceClose: true,
-
     // move course variables
     movingOn: false,
     viLeft: 0,
@@ -75,8 +72,16 @@ Page({
     this.data.calendarHeightPx = this.data.calendarHeightRpx / 750 * wx.getSystemInfoSync().windowWidth
     this.data.fiveMinSlotPx = this.data.calendarHeightPx * 5 / (this.data.timeRight - this.data.timeLeft)
     this.data.oneDaySlotPx = this.data.calendarWidthRpx / 750 * wx.getSystemInfoSync().windowWidth
-    console.log(this.data.oneDaySlotPx)
-    console.log(this.data.fiveMinSlotPx)
+    var dayObj = new Date()
+    this.setData({
+      today: {
+        year: dayObj.getFullYear(),
+        month: dayObj.getMonth() + 1,
+        date: dayObj.getDate(),
+        weekday: (dayObj.getDay() + 6) % 7,
+        weekdayStr: this.num2week((dayObj.getDay() + 6) % 7)
+      }
+    })
   },
 
   saveCourse: function(){
@@ -185,7 +190,6 @@ Page({
           duration: 1000
         })
         console.log('更新成功')
-        console.log(obj)
       },
       fail: err => {
         wx.lin.hideToast()
@@ -321,6 +325,7 @@ Page({
   },
 
   moveCourseStop: function(e){
+    var that = this
     var index = e.currentTarget.dataset.index
     var obj = this.data.courseList[index]
     var fixedX = 'courseList[' + index + '].x'
@@ -340,12 +345,9 @@ Page({
     var tr = obj.endTime.split(':')
     var deltaT = Number(tr[0] * 60) + Number(tr[1]) - Number(tl[0] * 60) - Number(tl[1])
 
-    // obj.x = this.data.numOneDaySlot * this.data.oneDaySlotPx
-    // obj.y = (this.data.numFiveMinSlot * 5) / (this.data.timeRight - this.data.timeLeft) * this.data.calendarHeightPx
     obj.startTime = this.mins2str(this.data.numFiveMinSlot * 5 + this.data.timeLeft)
     obj.endTime = this.mins2str(this.data.numFiveMinSlot * 5 + this.data.timeLeft + deltaT)
     obj.weekday = this.data.numOneDaySlot
-    obj.zIndex = this.data.DEFAULT_ZINDEX
 
     this.updateCourse(index, obj)
     this.setData({
@@ -450,6 +452,7 @@ Page({
         var tmp = this.data.courseList[i]
         if(tmp.weekday !== obj.weekday)
           continue
+
         if(tmp.zIndex !== z)
           continue
         if(tmp.endTime < obj.startTime || tmp.startTime > obj.endTime)
@@ -473,9 +476,11 @@ Page({
     var that = this
     var fixedX = 'courseList[' + index +'].x'
     var fixedY = 'courseList[' + index + '].y'
+    var fixedZIndex = 'courseList[' + index + '].zIndex'
     this.setData({
       [fixedX]: numOneDaySlot * this.data.oneDaySlotPx,
       [fixedY]: (numFiveMinSlot * 5) / (this.data.timeRight - this.data.timeLeft) * this.data.calendarHeightPx,
+      [fixedZIndex]: this.data.DEFAULT_ZINDEX
     }, () => {
       that.collisionShift(index)
     })
@@ -493,9 +498,11 @@ Page({
     var eArr = e.endTime.split(':')
     var tl = Number(sArr[0]) * 60 + Number(sArr[1])
     var tr = Number(eArr[0]) * 60 + Number(eArr[1])
-    e.height = (tr - tl) / (that.data.timeRight - that.data.timeLeft) * that.data.calendarHeightRpx
+    e.height = (tr - tl) / (that.data.timeRight - that.data.timeLeft) * that.data.calendarHeightRpx 
     e.y = (tl - that.data.timeLeft) / (that.data.timeRight - that.data.timeLeft) * that.data.calendarHeightPx
     e.x = e.weekday * that.data.oneDaySlotPx
+    e.numOneDaySlot = Math.floor(e.x / this.data.oneDaySlotPx)
+    e.numFiveMinSlot = Math.floor(e.y / this.data.fiveMinSlotPx)
     e.zIndex = this.data.DEFAULT_ZINDEX
   },
 

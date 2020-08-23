@@ -9,10 +9,23 @@
 .page-top-bar{
   width: 90%;
   display: flex;
-  flex-direction: row-reverse;
-  justify-content: start;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
   margin: 20rpx;
 }
+
+.today-box{
+  color: #415F96;
+  font-weight: 700;
+  font-size: 45rpx;
+}
+
+.top-bar-button-group{
+  display: flex;
+  flex-direction: row;
+}
+
 .curriculum-top{
   width: 700rpx;
   height: 900rpx;
@@ -40,7 +53,7 @@
 .curriculum-line{
   width: 100%;
   height: 4rpx;
-  background-color: #d4ddee;
+  background-color: #eef4ff;
 }
 
 .week-box{
@@ -285,19 +298,19 @@
 }
 
 .vertical-indicator{
-  z-index: 5;
+  z-index: 999;
   height: 830rpx;
   width: 3rpx;
 }
 
 .horizontal-indicator{
-  z-index: 5;
+  z-index: 999;
   height: 3rpx;
   width: 700rpx;
 }
 
 .indicator{
-  z-index: 6;
+  z-index: 999;
   font-size: 10px;
   color: white;
 }

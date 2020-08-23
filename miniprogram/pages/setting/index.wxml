@@ -60,7 +60,7 @@
       <block wx:for="{{presetList}}">
         <view class="card-gap" style="width:{{cardGapRpx}}rpx"/>
         <view class="card-top" style="width:{{cardWidthRpx}}rpx">
-          <l-avatar shape="square" size="500" src="{{item.imgUrl}}"/>
+          <l-avatar shape="square" size="500" src="{{item.imgUrl}}" shape="sqaure"/>
           <view class="card-info-box" style="position: relative;">
             <view class="card-name-box">
               <text class="card-name-text">{{item.name}}</text>
