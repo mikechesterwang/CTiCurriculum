@@ -1,4 +1,5 @@
 // miniprogram/pages/main/index.js
+const app = getApp()
 Page({
 
   /**
@@ -17,10 +18,10 @@ Page({
     week: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
     editPopupShow: false,
     editCoursePopupShow: false,
-    // weekday picker
-    weekdayArr: ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'],
-    timeArr: ['1-2节', '3-4节', '5-6节', '7-8节', '9-10节', '10-11节'],
-    timeDetailArr: [['08:00', '09:50'], ['10:20', '12:10'], ['14:00', '15:50'], ['16:20', '18:10'], ['19:00', '20:50'], ['21:20', '10:10']],
+    // semester information
+    timeArr: [],
+    timeRange: [],
+    semesterMondays: [],
     // course object variables
     index: 0,
     courseName: '',
@@ -57,11 +58,28 @@ Page({
 
   },
 
+  onShow: function(e){
+    this.setData({
+      timeArr: app.globalData.timeArr,
+      timeRange: app.globalData.timeRange,
+      semesterMondays: app.globalData.semesterMondays
+    })
+    this.refreshData()
+  },
+
   initData: function(){
+    var that = this
+
+    // 课程表画布数值计算
     var lArr = this.data.timeBoundLeft.split(':')
     var rArr = this.data.timeBoundRight.split(':')
     this.data.timeLeft = Number(lArr[0]) * 60 + Number(lArr[1])
     this.data.timeRight = Number(rArr[0]) * 60 + Number(rArr[1])
+    this.data.calendarHeightPx = this.data.calendarHeightRpx / 750 * wx.getSystemInfoSync().windowWidth
+    this.data.fiveMinSlotPx = this.data.calendarHeightPx * 5 / (this.data.timeRight - this.data.timeLeft)
+    this.data.oneDaySlotPx = this.data.calendarWidthRpx / 750 * wx.getSystemInfoSync().windowWidth
+
+    // 默认网格划线
     var tmpList = []
     for(var i = 0; i * 120 < this.data.timeRight - this.data.timeLeft; ++i){
       tmpList.push(i * 120 / (this.data.timeRight - this.data.timeLeft) * this.data.calendarHeightRpx)
@@ -69,9 +87,8 @@ Page({
     this.setData({
       lineArr: tmpList
     })
-    this.data.calendarHeightPx = this.data.calendarHeightRpx / 750 * wx.getSystemInfoSync().windowWidth
-    this.data.fiveMinSlotPx = this.data.calendarHeightPx * 5 / (this.data.timeRight - this.data.timeLeft)
-    this.data.oneDaySlotPx = this.data.calendarWidthRpx / 750 * wx.getSystemInfoSync().windowWidth
+
+    // 获取今日日期
     var dayObj = new Date()
     this.setData({
       today: {
@@ -79,8 +96,42 @@ Page({
         month: dayObj.getMonth() + 1,
         date: dayObj.getDate(),
         weekday: (dayObj.getDay() + 6) % 7,
-        weekdayStr: this.num2week((dayObj.getDay() + 6) % 7)
+        weekdayStr: this.num2week((dayObj.getDay() + 6) % 7),
+        weekIndexStr: '假期'
       }
+    })
+
+    this.refreshData()
+    
+  },
+
+  refreshData: function(){
+    // 显示学期信息
+    var weekIndex = 0
+    var dayObj = new Date()
+    for(var i = 0; i < this.data.semesterMondays.length; ++i){
+      var tmp = new Date(this.data.semesterMondays[i] + ' 00:00')
+      var delta = Math.floor((dayObj - tmp) / (24 * 60 * 60 * 1000))
+      if(delta < 0 || delta >= 7){
+        break
+      }
+      ++weekIndex
+    }
+    if(weekIndex !== 0){
+      that.setData({
+        'today.weekIndexStr': '第' + weekIndex + '周'
+      })
+    }
+
+    // 根据学期信息画网格线
+    var tmpList = []
+    for(var i = 0; i < this.data.timeRange.length; ++i){
+      var tmp = this.data.timeRange[i][0].split(':')
+      var mins = Number(tmp[0]) * 60 + Number(tmp[1])
+      tmpList.push((mins - this.data.timeLeft) / (this.data.timeRight - this.data.timeLeft) * this.data.calendarHeightRpx)
+    }
+    this.setData({
+      lineArr: tmpList
     })
   },
 
@@ -384,8 +435,8 @@ Page({
 
   onTimeSelectChange: function(e){
     this.setData({
-      startTime: this.data.timeDetailArr[e.detail.value][0],
-      endTime: this.data.timeDetailArr[e.detail.value][1]
+      startTime: this.data.timeRange[e.detail.value][0],
+      endTime: this.data.timeRange[e.detail.value][1]
     })
   },
   
@@ -506,6 +557,12 @@ Page({
     e.zIndex = this.data.DEFAULT_ZINDEX
   },
 
+  bindDevlog: function(){
+    wx.navigateTo({
+      url: '/pages/devlog/index',
+    })
+  },
+
   /**
    * 生命周期函数--监听页面加载
    */
@@ -536,4 +593,17 @@ Page({
         }
       })
   },
+
+  onShareAppMessage: function(e){
+    return {
+      title: '微信提醒上课 - CTi课程表',
+      path: '/pages/main/index'
+    }
+  },
+
+  onShareTimeline: function(e){
+    return {
+      title: '微信提醒上课 - CTi课程表'
+    }
+  }
 })

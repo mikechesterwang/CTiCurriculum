@@ -1,4 +1,5 @@
 // miniprogram/pages/setting/index.js
+const app = getApp()
 Page({
 
   /**
@@ -6,9 +7,6 @@ Page({
    */
   data: {
     mode: 0,
-    firstMonday: '2020-08-19',
-    weekCntPickerRange: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28],
-    weekCntIndex: 17,
     // page variables
     frameClass1: 'font',
     frameClass2: 'back',
@@ -148,6 +146,11 @@ Page({
       pullSettingMaskShow: false
     }, () => {
       that.updateSetting()
+      app.globalData.timeArr = obj.timeArr
+      app.globalData.timeRange = obj.timeRange
+      app.globalData.presetCollegeName = obj.name
+      app.globalData.presetCollegeImgUrl = obj.imgUrl
+      app.globalData.semesterMondays = obj.semesterMondays
     })
   },
 
@@ -264,94 +267,12 @@ Page({
   },
 
   onLoad: function(e){
-    var that = this
-    const db = wx.cloud.database()
-    db.collection('setting')
-      .get({
-        success: res => {
-          if(res.data.length === 0){ // 数据库中没有设置数据
-            db.collection('setting')
-              .add({
-                data: {
-                  semesterMondays: that.data.semesterMondays, 
-                  notificationOn: that.data.notificationOn,
-                  presetCollegeName: '-1'
-                },
-                success: res2 => {
-                  that.data.settingRecordId = res2._id
-                },
-                fail: err2 => {
-                  wx.lin.showToast({
-                    icon: 'error',
-                    title: '请检查网络',
-                    duration: 1000,
-                    complete: res => {
-                      wx.navigateBack()
-                    }
-                  })
-                  console.log('【数据库】[setting] 插入失败 ', err2)
-                }
-              })
-          }else{ // 数据库中已有设置数据
-            that.setData({
-              settingRecordId: res.data[0]._id,
-              semesterMondays: res.data[0].semesterMondays,
-              notificationOn: res.data[0].notificationOn,
-              presetCollegeName: res.data[0].presetCollegeName
-            })
-            if(res.data[0].presetCollegeName !== '-1'){
-              db.collection('preset')
-                .where({
-                  name: res.data[0].presetCollegeName
-                })
-                .get({
-                  success: res => {
-                    if(res.data.length === 0){
-                      that.setData({
-                        presetCollegeName: '-1'
-                      })
-                    }else{
-                      that.setData({
-                        presetCollegeImgUrl: res.data[0].imgUrl
-                      })
-                    }
-                  },
-                  fail: err =>{
-                    wx.lin.showToast({
-                      icon: 'warning',
-                      title: '请检查网络',
-                      duration: 1000
-                    })
-                    console.log('【数据库】[preset] 查询失败 ', err)
-                  }
-                })
-            }
-          }
-          
-        },
-        fail: err => {
-          wx.lin.showToast({
-            icon: 'error',
-            title: '请检查网络',
-            duration: 1000,
-            complete: res => {
-              wx.navigateBack()
-            }
-          })
-          console.log('【数据库】[setting] 查询失败 ', err)
-        }
-      })
-  },
-
-  onFirstMondayChange: function(e){
     this.setData({
-      firstMonday: e.detail.value
-    })
-  },
-
-  onWeekCntChange: function(e){
-    this.setData({
-      weekCntIndex: e.detail.value
+      settingRecordId: app.globalData.settingRecordId,
+      semesterMondays: app.globalData.semesterMondays,
+      notificationOn: app.globalData.notificationOn,
+      presetCollegeName: app.globalData.presetCollegeName,
+      presetCollegeImgUrl: app.globalData.presetCollegeImgUrl
     })
   },
 

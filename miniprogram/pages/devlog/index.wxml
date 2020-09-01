@@ -1,0 +1,16 @@
+<!--miniprogram/pages/devlog/index.wxml-->
+<text class="h1">开发者日志</text>
+<text class="h3">开发: 南方科技大学CAN极客社团 - CTi</text>
+<text class="h3">意见/建议/开源请联系邮箱: 11710403@mail.sustech.edu.cn</text>
+
+<text class="h2">v1.0.1 2020-09-01 学期信息显示 </text>
+<text class="h3">1. 显示所在的教学周</text>
+<text class="h3">2. 分享到朋友圈</text>
+<text class="h3">3. 根据学校预设值的学期信息画网格线</text>
+
+<text class="h2">v1.0.0 2020-08-22 项目启动 </text>
+<text class="h3">1. 课程表视图</text>
+<text class="h3">2. 可以自己添加/编辑/删除课程</text>
+<text class="h3">3. 拉取学校预设置的学期信息</text>
+
+

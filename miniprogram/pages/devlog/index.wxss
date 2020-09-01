@@ -1,0 +1,22 @@
+/* miniprogram/pages/devlog/index.wxss */
+page{
+  padding-left: 20rpx; 
+}
+.h1{
+  font-size: 50rpx;
+  font-weight: 700;
+  margin-top: 10rpx;
+  margin-bottom: 10rpx;
+}
+
+.h2{
+  font-size: 30rpx;
+  color: rgb(0, 0, 0);
+  margin-top: 50rpx;
+  margin-bottom: 10rpx;
+}
+
+.h3{
+  font-size: 25rpx;
+  color: rgb(109, 109, 109);
+}

@@ -1,7 +1,8 @@
 {
   "pages": [
     "pages/main/index",
-    "pages/setting/index"
+    "pages/setting/index",
+    "pages/devlog/index"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

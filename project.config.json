@@ -25,12 +25,12 @@
 			"outputPath": ""
 		},
 		"useIsolateContext": true,
-		"useCompilerModule": true,
+		"useCompilerModule": false,
 		"userConfirmedUseCompilerModuleSwitch": false
 	},
 	"appid": "wx37e6019c40b8f614",
 	"projectname": "curriculum",
-	"libVersion": "2.12.1",
+	"libVersion": "2.12.2",
 	"simulatorType": "wechat",
 	"simulatorPluginLibVersion": {},
 	"condition": {
@@ -66,6 +66,13 @@
 					"id": -1,
 					"name": "设置页面",
 					"pathName": "pages/setting/index",
+					"query": "",
+					"scene": null
+				},
+				{
+					"id": -1,
+					"name": "开发者日志",
+					"pathName": "pages/devlog/index",
 					"scene": null
 				}
 			]

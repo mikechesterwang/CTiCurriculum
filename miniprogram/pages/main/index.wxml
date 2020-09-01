@@ -2,6 +2,7 @@
 <view class="top">
   <view class="page-top-bar">
     <view class="today-box">
+      {{today.weekIndexStr}}
       {{today.weekdayStr}}
     </view>
     <view class="top-bar-button-group">
@@ -21,9 +22,9 @@
       <view class="navigator-box">
         <l-icon name="setting" size="50" bindtap="bindSetting"/>
       </view>
-      <view class="navigator-box">
+      <!-- <view class="navigator-box">
         <l-icon name="order" size="50" bindtap="bindSwicthView"/>
-      </view>
+      </view> -->
     </view>
     
   </view>
@@ -59,6 +60,9 @@
     <button size="mini" class="add-button" bindtap="addCourse">添加新课程</button>
     <button size="mini" class="share-button" bindtap="shareCurriculum">分享课程表</button>
   </view> -->
+  <view class="tips-box">
+    <text class="tips" bindtap="bindDevlog">版本: v1.0.1</text>
+  </view>
 </view>
 
 <l-popup show="{{editPopupShow}}" >
