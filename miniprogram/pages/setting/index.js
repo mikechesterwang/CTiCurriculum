@@ -16,7 +16,7 @@ Page({
     presetCollegeImgUrl: '',
     notificationOn: false,
     semesterMondays: [],
-    
+    advanceMins: 20,
     // pull setting variables
     pullSettingMaskShow: false,
     presetList: [],
@@ -38,6 +38,7 @@ Page({
     return
   },
 
+  /** 点击保存 */
   saveAll: function(){
     // check validity
     var weekDelta = 24 * 60 * 60 * 1000
@@ -68,27 +69,45 @@ Page({
     this.updateSetting()
   },
 
+  /** 保存到数据库 */
   updateSetting(){
     var that = this
     wx.lin.showToast({
       icon: 'loading',
-      title: '保存中'
+      title: '保存中',
+      duration: 10000
     })
     wx.cloud.callFunction({
       name: 'updateSetting',
       data: {
+        _openid: app.globalData._openid,
         _id: that.data.settingRecordId,
         notificationOn: that.data.notificationOn,
         semesterMondays: that.data.semesterMondays,
-        presetCollegeName: that.data.presetCollegeName
+        presetCollegeName: that.data.presetCollegeName,
+        advanceMins: that.data.advanceMins
       },
       success: res => {
-        wx.lin.hideToast()
-        wx.lin.showToast({
-          icon: 'success',
-          title: '保存成功',
-          duration: 1000
-        })
+        if(res.result.success){
+          app.globalData.notificationOn = that.data.notificationOn
+          app.globalData.semesterMondays = that.data.semesterMondays
+          app.globalData.presetCollegeName = that.data.presetCollegeName
+          app.globalData.advanceMins = that.data.advanceMins
+          wx.lin.hideToast()
+          wx.lin.showToast({
+            icon: 'success',
+            title: '保存成功',
+            duration: 1000
+          })
+        }else{
+          console.log('【云函数】[updateSetting] 调用失败 ', res)
+          wx.lin.hideToast()
+          wx.lin.showToast({
+            icon: 'warning',
+            title: '请检查网络',
+            duration: 1000
+          })
+        }
       },
       fail: err =>{
         console.log('【云函数】[updateSetting] 调用失败 ', err)
@@ -102,6 +121,7 @@ Page({
     })
   },
 
+  /** 旋转动画 */
   switchMode: function(){
     var that = this
     if(this.data.mode === 0){
@@ -129,6 +149,7 @@ Page({
  
   },
 
+  /** 自定义设置时选择某一周的周一时间 */
   onMondaysChange: function(e){
     var tmp = 'semesterMondays[' + e.currentTarget.dataset.index + ']'
     this.setData({
@@ -136,6 +157,7 @@ Page({
     })
   },
 
+  /** 确认选择卡片 */
   getSetting: function(e){
     var that = this
     var obj = this.data.presetList[e.currentTarget.dataset.index]
@@ -143,7 +165,7 @@ Page({
       presetCollegeName: obj.name,
       presetCollegeImgUrl: obj.imgUrl,
       semesterMondays: obj.semesterMondays,
-      pullSettingMaskShow: false
+      pullSettingMaskShow: false,
     }, () => {
       that.updateSetting()
       app.globalData.timeArr = obj.timeArr
@@ -154,17 +176,20 @@ Page({
     })
   },
 
+  /** 手滑卡片开始移动回调 */
   onCardSlideStart: function(e){
     this.data.pressed = true
     this.data.reponsed = false
     this.data.lastX = e.changedTouches[0].pageX
   },
 
+  /** 手势离开卡片回调 */
   onCardSlideEnd: function(e){
     this.data.pressed = false
     this.data.direction = e.changedTouches[0].pageX - this.data.lastX > 0 ? -1 : 1
   },
 
+  /** 卡片正在移动回调 */
   onCardChange: function(e){
     if(this.data.pressed)
       return
@@ -180,6 +205,7 @@ Page({
     return num < left ? left : (num > right ? right : num)
   },
 
+  /** 卡片停下回调 */
   onCardStop(e){
     if(this.data.reponsed)
       return
@@ -200,6 +226,7 @@ Page({
     this.data.lastK = k
   },
   
+  /** 显示可拉取设置卡片窗口 */
   pullSetting: function(){
     var that = this
     const db = wx.cloud.database()
@@ -229,6 +256,7 @@ Page({
       })
   },
 
+  /** 关闭卡片选择窗口 */
   closePullSettingMask: function(){
     this.setData({
       pullSettingMaskShow: false
@@ -239,6 +267,7 @@ Page({
     return num < 10 ? ('0' + num) : num
   },
 
+  /** 自定义设置添加一项 */
   advancedAdd: function(){
     if(this.data.semesterMondays.length === 0){
       var date = new Date()
@@ -256,6 +285,7 @@ Page({
     })
   },
 
+  /**  自定义设置删除最后一项 */
   advancedDelteLast: function(){
     if(this.data.semesterMondays.length === 0)
       return
@@ -266,13 +296,20 @@ Page({
     })
   },
 
+  onAdvanceMinsInput: function(e){
+    this.setData({
+      advanceMins: Number(e.detail.value)
+    })
+  },
+
   onLoad: function(e){
     this.setData({
       settingRecordId: app.globalData.settingRecordId,
       semesterMondays: app.globalData.semesterMondays,
       notificationOn: app.globalData.notificationOn,
       presetCollegeName: app.globalData.presetCollegeName,
-      presetCollegeImgUrl: app.globalData.presetCollegeImgUrl
+      presetCollegeImgUrl: app.globalData.presetCollegeImgUrl,
+      advanceMins: app.globalData.advanceMins
     })
   },
 

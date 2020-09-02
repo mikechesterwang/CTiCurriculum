@@ -1,0 +1,9 @@
+{
+  "triggers": [
+    {
+      "name": "timeMonitorTrigger",
+      "type": "timer",
+      "config": "0 */5 5-23 * * * *"
+    }
+  ]
+}

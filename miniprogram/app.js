@@ -6,12 +6,13 @@ App({
     timeArr: ['1-2节', '3-4节', '5-6节', '7-8节', '9-10节', '10-11节'],
     timeRange: [['08:00', '09:50'], ['10:20', '12:10'], ['14:00', '15:50'], ['16:20', '18:10'], ['19:00', '20:50'], ['21:20', '22:10']],
     semesterMondays: [],
+    advanceMins: 30,
     presetCollegeName: '-1',
     settingRecordId: '',
     presetCollegeName: '-1',
     presetCollegeImgUrl: '',
     notificationOn: false,
-    semesterMondays: [],
+    _openid: ''
   },
 
   onLaunch: function () {
@@ -31,6 +32,16 @@ App({
       })
     }
 
+    wx.cloud.callFunction({
+      name: 'getContext',
+      success: res => {
+        that.globalData._openid = res.result.openid
+      },
+      fail: err => {
+        console.error(err)
+      }
+    })
+
     var that = this
     const db = wx.cloud.database()
     db.collection('setting')
@@ -42,7 +53,8 @@ App({
                 data: {
                   semesterMondays: that.globalData.semesterMondays, 
                   notificationOn: that.globalData.notificationOn,
-                  presetCollegeName: '-1'
+                  presetCollegeName: '-1',
+                  advanceMins: that.globalData.advanceMins
                 },
                 success: res2 => {
                   that.globalData.settingRecordId = res2._id
@@ -64,6 +76,7 @@ App({
             that.globalData.semesterMondays = res.data[0].semesterMondays,
             that.globalData.notificationOn = res.data[0].notificationOn,
             that.globalData.presetCollegeName = res.data[0].presetCollegeName
+            that.globalData.advanceMins = res.data[0].advanceMins
 
             if(res.data[0].presetCollegeName !== '-1'){
               db.collection('preset')

@@ -8,8 +8,18 @@
     <view class="setting-box" >
       <view class="switch-setting-unit">
         <text class="setting-label">微信推送提醒上课</text>
-        <!-- <text style="font-size: 20rpx; color: #dddddd">即将上线，敬请期待</text> -->
-        <switch checked="{{notificationOn}}" bindchange="onEnableNotificationChange"/>
+        <text style="font-size: 20rpx; color: #dddddd">即将上线，敬请期待</text>
+        <!-- <switch checked="{{notificationOn}}" bindchange="onEnableNotificationChange"/> -->
+      </view>
+    </view>
+
+    <view wx:if="{{notificationOn}}" class="setting-box" >
+      <view class="input-setting-unit">
+        <text class="input-label">至少提前</text>
+        <view class="input-box">
+          <input type="number" value="{{advanceMins}}" bindinput="onAdvanceMinsInput"/>
+        </view>
+        <text class="input-label">分钟提醒</text>
       </view>
     </view>
 

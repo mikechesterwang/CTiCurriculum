@@ -55,7 +55,12 @@ Page({
     numOneDaySlot: 0,
     numFiveMinSlot: 0,
     indicatorColor: 'red',
-
+    // page content
+    annoucement: '',
+    // Affait variables
+    editAffairPopup: false,
+    affairDate: '',
+    affairInfo: ''
   },
 
   onShow: function(e){
@@ -97,7 +102,7 @@ Page({
         date: dayObj.getDate(),
         weekday: (dayObj.getDay() + 6) % 7,
         weekdayStr: this.num2week((dayObj.getDay() + 6) % 7),
-        weekIndexStr: '假期'
+        weekIndexStr: ''
       }
     })
 
@@ -139,6 +144,7 @@ Page({
     var that = this
   
     var data = {
+      _openid: app.globalData._openid,
       name: this.data.courseName,
       note: this.data.courseNote,
       weekday: this.data.weekdayIndex,
@@ -173,33 +179,45 @@ Page({
         icon: 'loading',
         title: '保存中'
       })
-      db.collection('course')
-      .add({
+      wx.cloud.callFunction({
+        name: 'addCourse',
         data: data,
         success: res => {
-          // 更新视图
-          data._id = res._id
-          that.getPosition(data)
-          var tmpList = that.data.courseList
-          tmpList.push(data)
-          that.setData({
-            courseList: tmpList
-          })
-          // 碰撞检测
-          that.collisionShift(tmpList.length - 1)
-          // 关闭编辑弹窗
-          that.setData({
-            editPopupShow: false,
-          })
-          wx.lin.hideToast()
-          wx.lin.showToast({
-            icon: 'success',
-            title: '保存成功',
-            duration: 1000
-          })
+          if(res.result.success){
+            console.log(res)
+            // 更新视图
+            data._id = res.result._id
+            console.log(data)
+            that.getPosition(data)
+            var tmpList = that.data.courseList
+            tmpList.push(data)
+            that.setData({
+              courseList: tmpList
+            })
+            // 碰撞检测
+            that.collisionShift(tmpList.length - 1)
+            // 关闭编辑弹窗
+            that.setData({
+              editPopupShow: false,
+            })
+            wx.lin.hideToast()
+            wx.lin.showToast({
+              icon: 'success',
+              title: '保存成功',
+              duration: 1000
+            })
+          }else{
+            console.log('【云函数】[addCourse] 调用失败', res)
+            wx.lin.hideToast()
+            wx.lin.showToast({
+              icon: 'error',
+              title: '请检查网络',
+              duration: 1000
+            })
+          }
         },
         fail: err => {
-          console.log('【数据库】[course] 插入失败', err)
+          console.log('【云函数】[addCourse] 调用失败', err)
           wx.lin.hideToast()
           wx.lin.showToast({
             icon: 'error',
@@ -214,12 +232,13 @@ Page({
     }
 
     this.setData({
-      editCoursePopupShow: false,
+      editCoursePopupShowShow: false,
       editPopupShow: false
     })
   },
 
   updateCourse: function(index, obj){
+    obj._openid = app.globalData._openid
     var tmp = 'courseList[' + index + ']'
     this.getPosition(obj)
     this.setData({
@@ -234,13 +253,23 @@ Page({
       name: 'updateCourse',
       data: obj,
       success: res => {
-        wx.lin.hideToast()
-        wx.lin.showToast({
-          icon: 'success',
-          title: '更新成功',
-          duration: 1000
-        })
-        console.log('更新成功')
+        if(res.result.success){
+          wx.lin.hideToast()
+          wx.lin.showToast({
+            icon: 'success',
+            title: '更新成功',
+            duration: 1000
+          })
+          console.log('更新成功')
+        }else{
+          wx.lin.hideToast()
+          wx.lin.showToast({
+            icon: 'warning',
+            title: '请检查网络',
+            duration: 1000
+          })
+          console.log('【云函数】[updateCourse] 调用失败 ', res)
+        }
       },
       fail: err => {
         wx.lin.hideToast()
@@ -278,7 +307,8 @@ Page({
           wx.cloud.callFunction({
             name: 'deleteCourse',
             data: {
-              _id: that.data.courseList[that.data.index]._id
+              _id: that.data.courseList[that.data.index]._id,
+              _openid: app.globalData._openid
             },
             success: res => {
               var tmpList = that.data.courseList
@@ -488,6 +518,17 @@ Page({
     this.bindAdd()
   },
 
+  addAffair: function(){
+    this.setData({
+      editAffairPopup: true,
+      mode: 0,
+      affairInfo: '',
+      startTime: '08:00',
+      endTime: '09:50',
+      affairDate: this.data.today.year + '-' + this.data.today.month + '-' + this.data.today.date
+    })
+  },
+
   collisionShift: function(index){
     var obj = this.data.courseList[index]
     var x = obj.x
@@ -570,6 +611,14 @@ Page({
     this.initData()
     var that = this
     const db = wx.cloud.database()
+    db.collection('backend')
+      .get({
+        success: res => {
+          that.setData({
+            annoucement: res.data[0].annoucement
+          })
+        }
+      })
     db.collection('course')
       .get({
         success: res => {
@@ -596,14 +645,14 @@ Page({
 
   onShareAppMessage: function(e){
     return {
-      title: '微信提醒上课 - CTi课程表',
+      title: '微信提醒上课 - CAN课程表',
       path: '/pages/main/index'
     }
   },
 
   onShareTimeline: function(e){
     return {
-      title: '微信提醒上课 - CTi课程表'
+      title: '微信提醒上课 - CAN课程表'
     }
   }
 })
