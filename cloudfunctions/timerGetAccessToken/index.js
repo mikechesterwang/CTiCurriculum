@@ -3,13 +3,15 @@ const cloud = require('wx-server-sdk')
 
 cloud.init()
 
-const appid = 'wx37e6019c40b8f614'
-const se = 'e6247a8f62ee89090c4650a418ac4abe'
-const db = cloud.database()
 const rq = require('request-promise')
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+
+  const db = cloud.database()
+  const se = (await (db.collection('backend').doc('SECRET').get())).data.value
+  const appid = (await (db.collection('backend').doc('APPID').get())).data.value
+
   try{
     var rtn = await rq({
       method: 'GET',
