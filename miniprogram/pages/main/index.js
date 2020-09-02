@@ -111,6 +111,7 @@ Page({
   },
 
   refreshData: function(){
+    var that = this
     // 显示学期信息
     var weekIndex = 0
     var dayObj = new Date()
@@ -232,7 +233,7 @@ Page({
     }
 
     this.setData({
-      editCoursePopupShowShow: false,
+      editCoursePopupShow: false,
       editPopupShow: false
     })
   },
@@ -612,10 +613,11 @@ Page({
     var that = this
     const db = wx.cloud.database()
     db.collection('backend')
+      .doc('ANNOUCEMENT')
       .get({
         success: res => {
           that.setData({
-            annoucement: res.data[0].annoucement
+            annoucement: res.data.annoucement
           })
         }
       })

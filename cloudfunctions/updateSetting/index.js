@@ -26,7 +26,7 @@ exports.main = async (event, context) => {
       }
     })
 
-    var semesterPlanChanged = m.semesterMondays.length !== event.semesterMondays.length
+    var semesterPlanChanged = (m.semesterMondays.length !== event.semesterMondays.length) || (m.advanceMins !== event.advanceMins)
     for(var i = 0, j = 0; i < m.semesterMondays.length && (!semesterPlanChanged); ++i, ++j){
       if(m.semesterMondays[i] !== event.semesterMondays[j])
         semesterPlanChanged = true

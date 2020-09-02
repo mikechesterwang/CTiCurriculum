@@ -250,10 +250,10 @@
   overflow: hidden;
 }
 @keyframes rolling{
-  from{height: 0rpx;} to{height: 212rpx;}
+  from{height: 0rpx;} to{height: 141rpx;}
 }
 @keyframes rolling-back{
-  from{height: 212rpx;} to{height: 0rpx;}
+  from{height: 141rpx;} to{height: 0rpx;}
 }
 .add-choice-button-close{
   animation: rotating-back 0.5s;

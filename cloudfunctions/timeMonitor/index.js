@@ -1,16 +1,21 @@
 // 云函数入口文件
 const cloud = require('wx-server-sdk')
+const sendMsg = require('message.js')
+const message = require('./message')
 
 cloud.init()
 
 const MAX_LIMIT = 100
-
 const SYSTEM_TIMER_CYCLE_MINS = 5
+
 
 // 云函数入口函数
 exports.main = async (event, context) => {
   const db = cloud.database()
   const _ = db.command
+  
+  var token = (await db.collection('backend').doc('ACCESS_TOKEN').get()).data.token
+  
   var leftDate = new Date()
   leftDate.setMinutes(leftDate.getMinutes())
   leftDate.setSeconds(0)
@@ -18,7 +23,6 @@ exports.main = async (event, context) => {
   rightDate.setMinutes(rightDate.getMinutes() + SYSTEM_TIMER_CYCLE_MINS)
   rightDate.setSeconds(0)
   var tasks = []
-
   const countResult = await db.collection('reminder')
     .where({
       time: _.and(_.gte(leftDate), _.lt(rightDate))
@@ -41,19 +45,34 @@ exports.main = async (event, context) => {
         errMsg: acc.errMsg
       }
     })
-    var tmp = []
     for(var i = 0; i < res.data.length; ++i){
       // 发送消息
-      tmp.push(await db.collection('test').add({data: {msg: 'trigged', time: new Date(), reminder: res.data[i].time}}))
+      var date = new Date(res.data[i].time)
+      date.setHours(date.getHours() + 8) // UTC + 0 -> UTC + 8
+      var format = date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日 ' 
+        + (date.getHours() < 10 ? '0' : '') + date.getHours()
+        + ':' 
+        + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()
+      
+        await message.sendMsg(token, {
+          touser: res.data[i]._openid,
+          page: '/pages/main/index',
+          data: {
+            date8: {
+              value: format
+            },
+            thing9: {
+              value: res.data[i].data.content
+            }
+          },
+          templateId: '7KK1M6ELN3yTc408GfW8J2CDuL8GS7uz6LsToA38KMI'
+        })
     }
-    return await Promise.all(tmp)
+    return {
+      success: true
+    }
   }else{
-    return await db.collection('test')
-      .add({
-        data: {
-          msg: 'triggerd, but no reminder',
-          time: new Date()
-        }
-      })
+    console.log('triggered, but no reminder')
+    return 'no reminder'
   }
 }

@@ -8,8 +8,8 @@
     <view class="setting-box" >
       <view class="switch-setting-unit">
         <text class="setting-label">微信推送提醒上课</text>
-        <text style="font-size: 20rpx; color: #dddddd">即将上线，敬请期待</text>
-        <!-- <switch checked="{{notificationOn}}" bindchange="onEnableNotificationChange"/> -->
+        <!-- <text style="font-size: 20rpx; color: #dddddd">即将上线，敬请期待</text> -->
+        <switch checked="{{notificationOn}}" bindchange="onEnableNotificationChange"/>
       </view>
     </view>
 

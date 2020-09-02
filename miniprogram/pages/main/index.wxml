@@ -17,10 +17,10 @@
           <view class="add-choice-unit" hover-class="add-choice-unit-hover" bindtap="addEvent">
             <text class="add-choice-unit-text">添加自定义课程</text>
           </view>
-          <view class="add-choice-divLine" />
+          <!-- <view class="add-choice-divLine" />
           <view class="add-choice-unit" hover-class="add-choice-unit-hover" bindtap="addAffair">
             <text class="add-choice-unit-text">添加事务</text>
-          </view>
+          </view> -->
         </view>
       </view>
       <view class="navigator-box">
@@ -64,7 +64,7 @@
     <button size="mini" class="share-button" bindtap="shareCurriculum">分享课程表</button>
   </view> -->
   <view class="tips-box">
-    <text class="tips" bindtap="bindDevlog">版本: v1.0.1</text>
+    <text class="tips" bindtap="bindDevlog">版本: v1.1.0</text>
     <text class="annoucement" bindtap="bindDevlog">{{annoucement}}</text>
   </view>
 </view>

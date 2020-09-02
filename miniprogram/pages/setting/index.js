@@ -314,9 +314,22 @@ Page({
   },
 
   onEnableNotificationChange: function(e){
+    var that = this
     this.setData({
       notificationOn: e.detail.value
     })
-    console.log((e.detail.value ? '开启' : '关闭') + '微信推送提醒')
+    // console.log((e.detail.value ? '开启' : '关闭') + '微信推送提醒')
+    if(e.detail.value){
+      wx.requestSubscribeMessage({
+        tmplIds: ['7KK1M6ELN3yTc408GfW8J2CDuL8GS7uz6LsToA38KMI'],
+        success: res => {
+          if(res['7KK1M6ELN3yTc408GfW8J2CDuL8GS7uz6LsToA38KMI'] !== 'accept'){
+            that.setData({
+              notificationOn: false
+            })            
+          }
+        }
+      })
+    }
   }
 })
