@@ -64,11 +64,6 @@ Page({
   },
 
   onShow: function(e){
-    this.setData({
-      timeArr: app.globalData.timeArr,
-      timeRange: app.globalData.timeRange,
-      semesterMondays: app.globalData.semesterMondays
-    })
     this.refreshData()
   },
 
@@ -101,22 +96,37 @@ Page({
         month: dayObj.getMonth() + 1,
         date: dayObj.getDate(),
         weekday: (dayObj.getDay() + 6) % 7,
-        weekdayStr: this.num2week((dayObj.getDay() + 6) % 7),
-        weekIndexStr: ''
+        weekdayStr: this.num2week((dayObj.getDay() + 6) % 7)
       }
     })
 
     this.refreshData()
-    
   },
 
   refreshData: function(){
     var that = this
+
+    this.setData({
+      timeArr: app.globalData.timeArr,
+      timeRange: app.globalData.timeRange,
+      semesterMondays: app.globalData.semesterMondays
+    })
+
+    app.dataUpdateCallBack = () => { // 解决onLaunch以及页面onLoad异步数据依赖问题
+      this.setData({
+        timeArr: app.globalData.timeArr,
+        timeRange: app.globalData.timeRange,
+        semesterMondays: app.globalData.semesterMondays
+      })
+      this.refreshData()
+    }
+
+   
     // 显示学期信息
     var weekIndex = 0
     var dayObj = new Date()
-    for(var i = 0; i < this.data.semesterMondays.length; ++i){
-      var tmp = new Date(this.data.semesterMondays[i] + ' 00:00')
+    for(var i = 0; i < app.globalData.semesterMondays.length; ++i){
+      var tmp = new Date(app.globalData.semesterMondays[i] + ' 00:00')
       var delta = Math.floor((dayObj - tmp) / (24 * 60 * 60 * 1000))
       if(delta < 0 || delta >= 7){
         break
@@ -126,6 +136,10 @@ Page({
     if(weekIndex !== 0){
       that.setData({
         'today.weekIndexStr': '第' + weekIndex + '周'
+      })
+    }else{
+      that.setData({
+        'today.weekIndexStr': ''
       })
     }
 

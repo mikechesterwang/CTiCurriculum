@@ -77,7 +77,9 @@ App({
             that.globalData.notificationOn = res.data[0].notificationOn,
             that.globalData.presetCollegeName = res.data[0].presetCollegeName
             that.globalData.advanceMins = res.data[0].advanceMins
-
+            if(this.dataUpdateCallBack){ // 解决onLaunch以及页面onLoad异步数据依赖问题
+              this.dataUpdateCallBack()
+            }
             if(res.data[0].presetCollegeName !== '-1'){
               db.collection('preset')
                 .where({
@@ -91,6 +93,9 @@ App({
                       that.globalData.presetCollegeImgUrl = res2.data[0].imgUrl
                       that.globalData.timeArr = res2.data[0].timeArr
                       that.globalData.timeRange = res2.data[0].timeRange
+                      if(this.dataUpdateCallBack){ // 解决onLaunch以及页面onLoad异步数据依赖问题
+                        this.dataUpdateCallBack()
+                      }
                     }
                   },
                   fail: err =>{
