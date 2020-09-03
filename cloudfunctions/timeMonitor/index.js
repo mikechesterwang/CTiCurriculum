@@ -50,9 +50,7 @@ exports.main = async (event, context) => {
       var date = new Date(res.data[i].time)
       date.setHours(date.getHours() + 8) // UTC + 0 -> UTC + 8
       var format = date.getFullYear() + '年' + (date.getMonth() + 1) + '月' + date.getDate() + '日 ' 
-        + (date.getHours() < 10 ? '0' : '') + date.getHours()
-        + ':' 
-        + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()
+        + res.data[i].data.time
       
         await message.sendMsg(token, {
           touser: res.data[i]._openid,

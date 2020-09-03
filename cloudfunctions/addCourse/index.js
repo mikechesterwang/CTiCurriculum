@@ -56,7 +56,7 @@ exports.main = async (event, context) => {
               _openid: event._openid,
               time: date,
               data: {
-                title: '上课提醒',
+                time: event.startTime,
                 content: event.name + ' ' + event.note
               }
             }

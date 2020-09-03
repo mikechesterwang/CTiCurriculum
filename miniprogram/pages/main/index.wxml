@@ -64,7 +64,7 @@
     <button size="mini" class="share-button" bindtap="shareCurriculum">分享课程表</button>
   </view> -->
   <view class="tips-box">
-    <text class="tips" bindtap="bindDevlog">版本: v1.1.0</text>
+    <text class="tips" bindtap="bindDevlog">版本: v1.1.1</text>
     <text class="annoucement" bindtap="bindDevlog">{{annoucement}}</text>
   </view>
 </view>

@@ -635,28 +635,29 @@ Page({
           })
         }
       })
-    db.collection('course')
-      .get({
-        success: res => {
-          for(var i = 0; i < res.data.length; ++i){
-            that.getPosition(res.data[i])
-          }
-          console.log(res.data)
-          that.setData({
-            courseList: res.data
-          })
-          for(var i = 0; i < res.data.length; ++i){
-            that.collisionShift(i)
-          }
-        },
-        fail: err =>{
-          wx.lin.showToast({
-            icon: 'error',
-            title: '请检查网络连接'
-          })
-          console.log('【数据库】[course] 查询失败 ', err)
+    wx.cloud.callFunction({
+      name: 'getCourses',
+      data: {},
+      success: res => {
+        for(var i = 0; i < res.result.data.length; ++i){
+          that.getPosition(res.result.data[i])
         }
-      })
+        console.log(res.result.data)
+        that.setData({
+          courseList: res.result.data
+        })
+        for(var i = 0; i < res.result.data.length; ++i){
+          that.collisionShift(i)
+        }
+      },
+      fail: err => {
+        wx.lin.showToast({
+          icon: 'error',
+          title: '请检查网络连接'
+        })
+        console.log('【云函数】[getCourses] 调用失败 ', err)
+      }
+    })
   },
 
   onShareAppMessage: function(e){

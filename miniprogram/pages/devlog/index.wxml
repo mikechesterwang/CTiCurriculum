@@ -3,11 +3,18 @@
 <text class="h3">开发: 南方科技大学CAN极客社团 - CTi</text>
 <text class="h3">意见/建议/开源请联系邮箱: 11710403@mail.sustech.edu.cn</text>
 
+<text class="h2">v1.1.1</text>
+<text class="h3">2020-09-03</text>
+<text class="h3">1. 修复了第一次打开课程表页面不显示周数的问题</text>
+<text class="h3">2. 修复了微信提醒中上课时间显示不准确的问题</text>
+<text class="h3">3. 修复了更新课程信息时，微信提醒中没有相应更新的问题</text>
+<text class="h3">4. 修复了课程显示不全的问题</text>
+
 <text class="h2">v1.1.0</text>
 <text class="h3">2020-09-02</text>
 <text class="h3">1. 可以设置提醒时间</text>
 <text class="h3">2. 修复了编辑课程时单双周显示有误的问题</text>
-<text class="h3">3. 微信提醒功能内测</text>
+<text class="h3">3. 新增了微信提醒功能</text>
 
 <text class="h2">v1.0.1</text>
 <text class="h3">2020-09-01</text>
